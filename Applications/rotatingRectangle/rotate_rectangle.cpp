@@ -1,6 +1,4 @@
 #include "rotate_rectangle.hpp"
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
 
 Rectangle::Rectangle(const std::string& title,const uint16_t width,const uint16_t height) :
 
