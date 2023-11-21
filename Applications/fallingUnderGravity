@@ -1,0 +1,72 @@
+#include <SDL2/SDL.h>
+
+enum    direction 
+{
+        DOWN,
+        UP
+};
+int main()
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    const int SCREEN_WIDTH = 1000;
+    const int SCREEN_HEIGHT = 800;
+
+    SDL_Window* window = SDL_CreateWindow("Falling rectangle",
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            SDL_WINDOW_SHOWN);
+    SDL_Renderer* renderer;
+    renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+
+    bool running = true;
+
+    SDL_Event event;
+    int x=500,y=0,w=75,h=75;
+
+    //
+    float COFF_OF_RESTITUTION = 0.8;
+    
+    SDL_Rect rect={x,y,w,h};
+
+    bool direction = DOWN;
+
+    int CEILING = 0;
+    int FLOOR = SCREEN_HEIGHT - rect.h;
+
+    float POSITION = 0,VELOCITY = 0,ACCELERATION = 0.0001;
+ 
+    while(running)
+    {
+        while(SDL_PollEvent(&event))
+        {
+            switch(event.type)
+            {
+                case SDL_QUIT:
+                    running =false;
+            }
+        }
+        SDL_SetRenderDrawColor(renderer,255,255,255,255);
+        SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawColor(renderer,255,0,0,255);
+        SDL_RenderFillRect(renderer,&rect);
+        SDL_RenderPresent(renderer);
+
+        rect.y=POSITION;
+        VELOCITY += ACCELERATION;
+        POSITION += VELOCITY;
+
+        if(POSITION >= SCREEN_HEIGHT - rect.h)
+        {
+           VELOCITY = -VELOCITY*COFF_OF_RESTITUTION;
+        }
+                
+    }
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    return 0;
+}
